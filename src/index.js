@@ -39,6 +39,7 @@ function onInput(evt) {
 }
 
 function addElmOneCountry(oneCount) {
+  cleanInfoHtml();
   list.innerHTML = `<li class="info-list"><img class="flags" src="${oneCount.flags[0]}" alt="flags-${oneCount.name.common}"/><p class="one__country">${oneCount.name.common}</p>`;
 
   countryInfo.insertAdjacentHTML(

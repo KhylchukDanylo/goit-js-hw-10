@@ -18,3 +18,28 @@ body {
   max-width: 320px;
   margin-bottom: 16px;
 }
+
+.info-list {
+  display: flex;
+  text-decoration: none;
+  align-items: center;
+}
+
+.one__country {
+  font-size: 40px;
+  padding-left: 10px;
+  margin: 0;
+}
+
+.flags {
+  width: auto;
+  height: 35px;
+  padding: 3px;
+  border: dashed #000 2px;
+}
+.no__one {
+  padding-left: 10px;
+}
+.info__list {
+  list-style-type: none;
+}

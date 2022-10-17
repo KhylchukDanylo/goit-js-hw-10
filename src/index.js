@@ -6,14 +6,14 @@ const DEBOUNCE_DELAY = 300;
 const inputText = document.querySelector('#search-box');
 const list = document.querySelector('.country-list');
 const countryInfo = document.querySelector('.country-info');
-
+console.log(list);
 const debounce = require('lodash.debounce');
 inputText.addEventListener('input', debounce(onInput, DEBOUNCE_DELAY));
 
 function onInput(evt) {
   const name = evt.target.value.trim().toLowerCase();
   fetch(
-    `https://restcountries.com/v3/name/${name}?fields=name,capital,population,flags,languages`
+    `https://restcountries.com/v3.1/name/${name}?fields=name,capital,population,flags,languages`
   )
     .then(response => {
       if (!response.ok) {
@@ -48,11 +48,13 @@ function addElmOneCountry(oneCount) {
         <li>Capital: ${oneCount.capital}</li>
         <li>Population: ${oneCount.population}</li>
         <li>Languages: ${arrLanguages(oneCount).join(', ')}</li>
+        
       </ul>`
   );
 }
 function arrLanguages(oneCount) {
   const objectLanguages = oneCount.languages;
+
   const arrLanguages = [];
   for (const key in objectLanguages) {
     arrLanguages.push(objectLanguages[key]);

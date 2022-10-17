@@ -6,12 +6,16 @@ const DEBOUNCE_DELAY = 300;
 const inputText = document.querySelector('#search-box');
 const list = document.querySelector('.country-list');
 const countryInfo = document.querySelector('.country-info');
-console.log(list);
+
 const debounce = require('lodash.debounce');
 inputText.addEventListener('input', debounce(onInput, DEBOUNCE_DELAY));
 
 function onInput(evt) {
   const name = evt.target.value.trim().toLowerCase();
+  if (name === '') {
+    cleanListHtml();
+    return;
+  }
   fetch(
     `https://restcountries.com/v3.1/name/${name}?fields=name,capital,population,flags,languages`
   )
@@ -23,11 +27,12 @@ function onInput(evt) {
     })
     .then(data => {
       if (data.length > 10) {
+        cleanListHtml();
         warningAlert();
-        return;
+        // return;
       } else if (data.length === 1) {
         addElmOneCountry(data[0]);
-      } else if (data.length > 1) {
+      } else if (data.length >= 2 && data.length <= 10) {
         addMaxTenElm(data);
       }
     })
@@ -40,26 +45,20 @@ function onInput(evt) {
 
 function addElmOneCountry(oneCount) {
   cleanInfoHtml();
-  list.innerHTML = `<li class="info-list"><img class="flags" src="${oneCount.flags[0]}" alt="flags-${oneCount.name.common}"/><p class="one__country">${oneCount.name.common}</p>`;
+  list.innerHTML = `<li class="info-list"><img class="flags" src="${oneCount.flags.svg}" alt="flags-${oneCount.name.common}"/><p class="one__country">${oneCount.name.common}</p>`;
 
   countryInfo.insertAdjacentHTML(
     'beforeend',
     `<ul class="info__list">
         <li>Capital: ${oneCount.capital}</li>
         <li>Population: ${oneCount.population}</li>
-        <li>Languages: ${arrLanguages(oneCount).join(', ')}</li>
+        <li>Languages: ${arrLanguages(oneCount)}</li>
         
       </ul>`
   );
 }
 function arrLanguages(oneCount) {
-  const objectLanguages = oneCount.languages;
-
-  const arrLanguages = [];
-  for (const key in objectLanguages) {
-    arrLanguages.push(objectLanguages[key]);
-  }
-  return arrLanguages;
+  return Object.values(oneCount.languages).join(', ');
 }
 function warningAlert() {
   Notiflix.Notify.info(
@@ -72,9 +71,9 @@ function errorAlert() {
 function addMaxTenElm(data) {
   const markyp = [];
   cleanInfoHtml();
-  data.forEach(item => {
+  data.map(item => {
     markyp.push(
-      `<li class="info-list"><img class="flags" src="${item.flags[0]}" alt="flags-${item.name.common}"/><p class="no__one">${item.name.common}</p></li>`
+      `<li class="info-list"><img class="flags" src="${item.flags.svg}" alt="flags-${item.name.common}"/><p class="no__one">${item.name.common}</p></li>`
     );
     list.innerHTML = markyp.join(' ');
   });
